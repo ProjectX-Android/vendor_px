@@ -47,6 +47,12 @@ txtrst=$(tput sgr0) # Reset
     echo "${red}No vendor/px directory found.  Is this a ProjectX build tree?${txtrst}"
     exit 3
   fi
+device="$1"
+
+  if [[ ! -d vendor/*/$device ]]; then
+    echo "${bldred}No proprietary files found!${txtrst}"
+    exit 4
+  fi
 
 # figure out the output directories
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -101,7 +107,6 @@ shift $((OPTIND-1))
   if [[ "$#" -ne 1 ]]; then
     usage
   fi
-device="$1"
 
 echo "${cya}Starting ${ppl}ProjectX...${txtrst}"
 
@@ -178,7 +183,7 @@ FCheck=$?
 
   if [[ ${FCheck} -ne 0 ]]; then
     echo "${bldred}Build failed, error code: ${FCheck}${txtrst}"
-    exit 4
+    exit 5
   fi
 t2=$($DATE +%s)
 
