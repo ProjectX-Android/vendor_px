@@ -39,19 +39,66 @@ bldcya=${txtbld}$(tput setaf 6) # cyan
 txtrst=$(tput sgr0) # Reset
 
   if [[ ! -d ".repo" ]]; then
-    echo "${red}No .repo directory found.  Is this an Android build tree?${txtrst}"
-    exit 2
+    echo ""
+    read -p "${bldred}No .repo directory found in ${PWD}. Do you want to download the source here? [y/n]: ${txtrst}" dwnld
+
+      until [[ "$dwnld" -eq y ]] || [[ "$dwnld" -eq n ]]; do
+	echo ""
+	read -p "${bldred}Enter [y/n]: ${txtrst}" dwnld
+      done
+    echo ""
+
+      if [[ "$dwnld" -eq y ]]; then
+	echo "${bldgrn}Initializing source...${txtrst}"
+	repo init -u git://github.com/ProjectX-Android/manifest.git -b lollipop-5.1
+	FCheck=$?
+	echo ""
+
+	  if [[ "$FCheck" -ne 0 ]]; then
+	    echo "${bldred}Failed to initialize repo, error code: ${FCheck}${txtrst}"
+	    exit 2
+	  else
+	    echo "${bldcya}Repo initialized!${txtrst}"
+	  fi
+	echo ""
+	echo "${bldgrn}Downloading source...${txtrst}"
+	repo sync -j200
+	FCheck=$?
+	echo ""
+
+	  if [[ "$FCheck" -ne 0 ]]; then
+	    echo "${bldred}Failed to download repo, error code: ${FCheck}${txtrst}"
+	    exit 3
+	  else
+	    echo "${bldcya}Repo downloaded!${txtrst}"
+	  fi
+
+	echo "${bldgrn}Adding execute permissons...${txtrst}"
+	chmod a+x -R ./*
+	FCheck=$?
+	echo ""
+
+	  if [[ "$FCheck" -ne 0 ]]; then
+	    echo "${bldred}Failed to add execute permissons, error code: ${FCheck}${txtrst}"
+	    exit 4
+	  else
+	    echo "${bldcya}Execute permissions added!${txtrst}"
+	  fi
+      else
+	echo "${bldred}Will not download the source!${txtrst}"
+	exit 5
+      fi
   fi
 
   if [[ ! -d "vendor/px" ]]; then
     echo "${red}No vendor/px directory found.  Is this a ProjectX build tree?${txtrst}"
-    exit 3
+    exit 6
   fi
 device="$1"
 
-  if [[ ! -d vendor/*/$device ]]; then
+  if [[ ! -d "vendor/*/$device" ]]; then
     echo "${bldred}No proprietary files found!${txtrst}"
-    exit 4
+    exit 7
   fi
 
 # figure out the output directories
@@ -83,7 +130,6 @@ fi
 
 export OPT_CPUS=$(bc <<< "($CPUS-1)*2")
 export USE_CCACHE=1
-
 opt_clean=0
 opt_dex=0
 opt_initlogo=0
@@ -92,6 +138,7 @@ opt_sync=0
 opt_pipe=0
 opt_verbose=0
 opt_log=0
+
 
   while getopts "c:j:s:u:l" opt; do
     case "$opt" in
@@ -183,7 +230,7 @@ FCheck=$?
 
   if [[ ${FCheck} -ne 0 ]]; then
     echo "${bldred}Build failed, error code: ${FCheck}${txtrst}"
-    exit 5
+    exit 8
   fi
 t2=$($DATE +%s)
 
@@ -191,3 +238,4 @@ tmin=$(( (t2-t1)/60 ))
 tsec=$(( (t2-t1)%60 ))
 
 echo "${bldgrn}Total time elapsed:${txtrst} ${grn}$tmin minutes $tsec seconds${txtrst}"
+v
