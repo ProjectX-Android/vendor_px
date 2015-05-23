@@ -1,4 +1,6 @@
-for combo in $(curl -s https://raw.githubusercontent.com/CyanogenMod/hudson/master/cm-build-targets | sed -e 's/#.*$//' | grep cm-12.1 | awk {'print $1'})
-do
-    add_lunch_combo $combo
-done
+#add_lunch_combo px_DEVICE-VARIANT
+
+add_lunch_combo px_m8-userdebug
+add_lunch_combo px_m8-user
+add_lunch_combo px_bacon-userdebug
+add_lunch_combo px_bacon-user
