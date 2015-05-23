@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "facab960_bf3a6534",
+        "filename": "config/common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-05-23T17:42:53Z",
+      "side": 1,
+      "message": "PX",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 6
+      },
+      "revId": "11d6f9cab6055fd022b87c2e349614b26ab7f605",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_3fef35b2",
+        "filename": "config/common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-05-23T17:42:53Z",
+      "side": 1,
+      "message": "PX",
+      "range": {
+        "startLine": 222,
+        "startChar": 24,
+        "endLine": 222,
+        "endChar": 31
+      },
+      "revId": "11d6f9cab6055fd022b87c2e349614b26ab7f605",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_5f2b19eb",
+        "filename": "config/common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-05-23T17:42:53Z",
+      "side": 1,
+      "message": "px",
+      "range": {
+        "startLine": 223,
+        "startChar": 5,
+        "endLine": 223,
+        "endChar": 7
+      },
+      "revId": "11d6f9cab6055fd022b87c2e349614b26ab7f605",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
