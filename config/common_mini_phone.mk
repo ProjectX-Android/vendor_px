@@ -4,6 +4,10 @@ $(call inherit-product, vendor/px/config/common.mk)
 # Include PX audio files
 include vendor/px/config/cm_audio.mk
 
+# Required CM packages
+PRODUCT_PACKAGES += \
+    LatinIME
+
 # Default notification/alarm sounds
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.notification_sound=Argon.ogg \
