@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "facab960_a8af4693",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "why not just do vendor/*/$device\nmake it probably easier if we have more devcies",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_e8906e50",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "this extension isnt supported yet",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_c8956a41",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "I let the user device if tc should be built",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_08a0329e",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "see above",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_48895a25",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "see above",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_688c5e36",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "instead of just creating it, can we ask the user if there is a smtc folder already just with a different path?",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_88836203",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "remove this extension for now",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_a8866611",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "same as above",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_c87c8a23",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "s.a.",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_e8778e39",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "s.a.",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "facab960_28725649",
+        "filename": "tools/build.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-06T19:45:58Z",
+      "side": 1,
+      "message": "can we make an option for user builds? \n\nand it\u0027s not make $device it\u0027s make bacon",
+      "revId": "81f2f6bc6c863692a6df64e26d803300960bf557",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
