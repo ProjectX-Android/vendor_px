@@ -228,3 +228,10 @@ PRODUCT_PROPERTY_OVERRIDES += persist.sys.recovery_update=false
 -include vendor/cyngn/product.mk
 
 $(call prepend-product-if-exists, vendor/extra/product.mk)
+
+# Optimzations
+ifeq ($(strip $(USE_OPTIMIZATIONS)),true)
+  # Inherit sabermod vendor
+  SM_VENDOR := vendor/sabermod
+  include $(SM_VENDOR)/Main.mk
+endif
