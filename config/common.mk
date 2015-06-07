@@ -129,6 +129,11 @@ PRODUCT_PACKAGES += \
 
 #    CMUpdater
 
+# Prebuilt apps
+PRODUCT_COPY_FILES += \
+vendor/px/prebuilt/common/apps/KernelAdiutor.apk:system/app/com.grarak.kerneladiutor/kerneladiutor.apk \
+vendor/px/prebuilt/common/apps/BetterBatteryStats.apk:system/priv-app/com.asksven.betterbatterystats_xdaedition/betterbatterystats.apk
+
 # Launcher packages
 PRODUCT_PACKAGES += \
     Launcher3 \
