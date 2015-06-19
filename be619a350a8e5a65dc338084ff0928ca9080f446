@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "facab960_7ada2be9",
+        "filename": "config/common.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-06-19T20:48:40Z",
+      "side": 0,
+      "message": "remove",
+      "range": {
+        "startLine": 134,
+        "startChar": 102,
+        "endLine": 134,
+        "endChar": 104
+      },
+      "revId": "be619a350a8e5a65dc338084ff0928ca9080f446",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
