@@ -125,9 +125,8 @@ PRODUCT_PACKAGES += \
     PXWallpapers \
     CMFileManager \
     Eleven \
-    LockClock 
-
-#    CMUpdater
+    LockClock \
+    CMUpdater
 
 # Prebuilt apps
 PRODUCT_COPY_FILES += \
@@ -214,7 +213,7 @@ PRODUCT_VERSION_EXTRA = 0
 export PRODUCT_VERSION_NUMBER := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(PRODUCT_VERSION_EXTRA)
 
 PX_VERSION := ProjectX-v$(PRODUCT_VERSION_NUMBER)-$(shell date -u +%Y%m%d)
-       PX_DISPLAY_VERSION := ProjectX-v$(PRODUCT_VERSION_NUMBER)
+PX_DISPLAY_VERSION := ProjectX-v$(PRODUCT_VERSION_NUMBER)
 
 PRODUCT_PROPERTY_OVERRIDES += \
   ro.px.versionnumber=$(PRODUCT_VERSION_NUMBER) \
