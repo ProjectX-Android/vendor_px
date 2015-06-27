@@ -123,9 +123,14 @@ PRODUCT_PACKAGES += \
     PXWallpapers \
     CMFileManager \
     Eleven \
-    LockClock 
-
-#    CMUpdater
+    LockClock \
+ifeq ($(TARGET_DEVICE), bacon)
+    PXUpdater_bacon
+else
+  ifeq ($(TARGET_DEVICE), m8)
+    PXUpdater_m8
+  endif
+endif
 
 # Prebuilt apps
 PRODUCT_COPY_FILES += \
