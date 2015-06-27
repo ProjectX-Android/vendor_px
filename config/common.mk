@@ -123,9 +123,8 @@ PRODUCT_PACKAGES += \
     PXWallpapers \
     CMFileManager \
     Eleven \
-    LockClock 
-
-#    CMUpdater
+    LockClock \
+    PXUpdater
 
 # Prebuilt apps
 PRODUCT_COPY_FILES += \
