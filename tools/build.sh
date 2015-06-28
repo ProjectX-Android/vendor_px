@@ -25,8 +25,8 @@ usage()
    echo "    -u  Upload build via FTP after completion"
    echo ""
    echo "${txtbld}  Variants:${txtrst}"
-   echo "    -userdebug (default)"
-   echo "    -user"
+   echo "    -userdebug"
+   echo "    -user (default)"
    echo ""
    echo "${txtbld}  Example:${txtrst}"
    echo "    bash build.sh -c1 -j18 hammerhead userdebug"
@@ -121,7 +121,7 @@ variant=$2
   fi
 
   if [[ -z $variant ]]; then
-    variant=userdebug
+    variant=user
   fi
 
 echo "${cya}Starting ${ppl}ProjectX...${txtrst}"
