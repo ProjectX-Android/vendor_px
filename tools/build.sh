@@ -97,7 +97,7 @@ mch_tc_bckp=0
 no_tc1=0
 no_tc2=0
 
-  while getopts "c:hj:l:s:t:u" opt; do
+  while getopts "c:hj:l:st:u" opt; do
     case "$opt" in
       c) opt_clean="$OPTARG" ;;
       h) usage ;;
@@ -113,7 +113,7 @@ no_tc2=0
 shift $((OPTIND-1))
 
 device="$1"
-variant=$2
+variant="$2"
 
   if [[ -z $device ]]; then
     echo "${bldred}No device specified${txtrst}"
@@ -410,7 +410,7 @@ echo "${bldblu}Setting up environment${txtrst}"
     chmod a+x build/envsetup.sh
     . build/envsetup.sh
   fi
-lunch "px_$device-$variant"
+lunch "px_${device}-$variant"
 
 # Remove system folder (this will create a new build.prop with updated build time and date)
 rm -f "$OUTDIR/target/product/$device/system/build.prop"
