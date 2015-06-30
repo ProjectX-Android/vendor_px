@@ -403,13 +403,14 @@ t1=$($DATE +%s)
 
 # Setup environment
 echo "${bldblu}Setting up environment${txtrst}"
-. build/envsetup.sh &>/dev/null
+. build/envsetup.sh
 
   if [[ $? -eq 126 ]]; then
     echo "${bldblu}Changing build/envsetup permissions...${txtrst}"
     chmod a+x build/envsetup.sh
     . build/envsetup.sh
   fi
+lunch "px_$device-$variant"
 
 # Remove system folder (this will create a new build.prop with updated build time and date)
 rm -f "$OUTDIR/target/product/$device/system/build.prop"
@@ -423,10 +424,10 @@ echo ""
 
   if [[ $opt_log -eq 2 || $opt_log -eq 3 ]]; then
     echo "${bldblu}Compiling ROM with log (${HOME}/make_${device}.log)${txtrst}"
-    lunch "px_$device-$variant" && make bacon "-j$opt_jobs" > "$HOME/make_$device.log"
+    make bacon "-j$opt_jobs" > "$HOME/make_$device.log"
   else
     echo "${bldblu}Compiling ROM${txtrst}"
-    lunch "px_$device-$variant" && make bacon "-j$opt_jobs"
+    make bacon "-j$opt_jobs"
   fi
 FCheck=$?
 
