@@ -446,16 +446,15 @@ t1=$($DATE +%s)
 # Setup environment
 echo ""
 echo "${bldblu}Setting up environment${txtrst}"
-. build/envsetup.sh
+. build/envsetup.sh &>/dev/null
 
   if [[ $? -eq 126 ]]; then
     echo ""
     echo "${bldblu}Changing build/envsetup permissions...${txtrst}"
     chmod a+x build/envsetup.sh
-    . build/envsetup.sh
+    . build/envsetup.sh &>/dev/null
   fi
 lunch "px_${device}-$variant"
-echo ""
 echo "${grn}SUCCES:${txtrst} Environment setup succesfully"
 
 # Remove system folder (this will create a new build.prop with updated build time and date)
@@ -473,7 +472,7 @@ echo ""
     cmmnd_check
     echo "${grn}SUCCES:${txtrst} Build completed"
   else
-    echo "${bldblu}Compiling ProjectX for the $f_Device ${txtrst}"
+    echo "${bldblu}Compiling ProjectX for the $f_device ${txtrst}"
     cmmnd="make bacon -j$opt_jobs"
     make bacon "-j$opt_jobs"
     cmmnd_check
