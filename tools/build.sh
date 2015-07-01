@@ -34,6 +34,29 @@ usage()
    exit 1
  }
 
+yn_check()
+{
+ until [[ $yorn = y || $yorn = n ]]; do
+   echo ""
+   read -p "${bldred}Please enter [y/n]: ${txtrst}" yorn
+ done
+}
+
+cmmnd_check()
+ {
+  if [[ $? -ne 0 ]]; then
+    echo ""
+    echo "${bldred}ERROR:${txtrst} '$cmmnd' failed"
+    read -p "Do you want to continue? [y/n]: " yorn
+    yn_check
+    echo ""
+
+      if [[ $yorn -eq n ]]; then
+	exit 0
+      fi
+  fi
+ }
+
 # Prepare output colouring commands
 red=$(tput setaf 1) # Red
 grn=$(tput setaf 2) # Green
@@ -47,12 +70,15 @@ bldcya=${txtbld}${cya} # Cyan
 txtrst=$(tput sgr0) # Reset
 
   if [[ ! -d .repo ]]; then
-    echo "${bldred}No .repo directory found.  Is this an Android build tree?${txtrst}"
+    echo ""
+    echo "${bldred}ERROR:${txtrst} No .repo directory found."
+    echo "Is this an Android build tree?"
     exit 2
   fi
 
   if [[ ! -d vendor/px ]]; then
-    echo "${bldred}No vendor/px directory found.  Is this a ProjectX build tree?${txtrst}"
+    echo ""
+    echo "${bldred}ERROR:${txtrst} No vendor/px directory found.  Is this a ProjectX build tree?"
     exit 3
   fi
 
@@ -63,14 +89,12 @@ thisSRCDIR="${PWD##*/}"
   if [[ -z $OUT_DIR_COMMON_BASE ]]; then
     export OUTDIR="$DIR/out"
     echo ""
-    echo "${cya}No external out, using default ($OUTDIR)${txtrst}"
-    echo ""
+    echo "${blu}WARNING:${txtrst} No external out, using default ($OUTDIR)"
   else
     export OUTDIR="$OUT_DIR_COMMON_BASE"
     echo ""
-    echo "${cya}External out DIR is set ($OUTDIR)${txtrst}"
-    echo "${cya}But $OUTDIR/$thisSRCDIR will be used${txtrst}"
-    echo ""
+    echo "${cya}External out DIR is set ($OUTDIR)"
+    echo "But $OUTDIR/$thisSRCDIR will be used${txtrst}"
   fi
 
 # Get OS (Linux / Mac OS X)
@@ -106,7 +130,7 @@ no_tc2=0
       s) opt_sync=1 ;;
       t) opt_tc=1 && mch_tc="$OPTARG" && mch_tc_bckp=$mch_tc ;;
       u) opt_upl=1 ;;
-      *) echo "${bldred}incorrect parameter${txtrst}"
+      *) echo "" && echo "${bldred}incorrect parameter${txtrst}"
 	 usage ;;
     esac
   done
@@ -116,71 +140,93 @@ device="$1"
 variant="$2"
 
   if [[ -z $device ]]; then
-    echo "${bldred}No device specified${txtrst}"
+    echo ""
+    echo "${bldred}ERROR:${txtrst} No device specified"
     usage
+
+  elif [[ $device -ne bacon || $device -ne m8 ]]; then
+    echo ""
+    echo "${bldred}WARNING:${txtrst} Invalid device specified"
+    echo ""
+    echo "Supported devices:"
+    echo "		     - bacon (OnePlus One)"
+    echo "		     - m8 (HTC One M8)"
+    exit 4
   fi
 
   if [[ -z $variant ]]; then
+    echo "${blu}WARNING:${txtrst} No build variant specified, 'user' will be used"
     variant=user
   fi
 
-echo "${cya}Starting ${ppl}ProjectX...${txtrst}"
+  if [[ $device -eq bacon ]]; then
+    f_device="OnePlus One"
+
+  elif [[ $device -eq m8 ]]; then
+    f_device="HTC One M8"
+  fi
+
+echo "${cya}Starting ProjectX for the ${f_device}...${txtrst}"
 
   if [[ $opt_clean -eq 1 ]]; then
-    make clean >/dev/null
     echo ""
-    echo "${bldblu}Out is clean${txtrst}"
-    echo ""
+    echo "${bldblu}Cleaning out directory...${txtrst}"
+    cmmnd="make clobber"
+    make clobber &>/dev/null
+    cmmnd_check
+    echo "${grn}SUCCES: ${txtrst}Out is clean"
 
   elif [[ $opt_clean -eq 2 ]]; then
-    make dirty >/dev/null
     echo ""
-    echo "${bldblu}Out is dirty${txtrst}"
-    echo ""
+    echo "${bldblu}Preparing for dirty...${txtrst}"
+    cmmnd="make dirty"
+    make dirty &>/dev/null
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} Out is dirty"
 
   elif [[ $opt_clean -eq 3 ]]; then
-    make magic >/dev/null
     echo ""
-    echo "${bldblu}Enjoy your magical adventure${txtrst}"
-    echo ""
+    echo "${bldblu}Preparing your magical adventures...${txtrst}"
+    cmmnd="make magic"
+    make magic &>/dev/null
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} Enjoy your magical adventure"
 
   elif [[ $opt_clean -eq 4 ]]; then
-    make kernelclean >/dev/null
     echo ""
-    echo "${bldblu}All kernel components have been removed${txtrst}"
-    echo ""
+    echo "${bldblu}Cleaning the kernel components....${txtrst}"
+    cmmnd="make kernelclean"
+    make kernelclean &>/dev/null
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} All kernel components have been removed"
   fi
 
 # Sync with latest sources
   if [[ $opt_sync -ne 0 ]]; then
     echo ""
-    echo "${bldblu}Fetching latest sources${txtrst}"
-    repo sync -j"$opt_jobs"
-    echo ""
+    echo "${bldblu}Syncing repository...${txtrst}"
+    cmmnd="repo sync -j$opt_jobs"
+    repo sync -j$opt_jobs
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} Repository synced"
   fi
 rm -f "$OUTDIR/target/product/$device/obj/KERNEL_OBJ/.version"
 
-yn_check()
-{
- until [[ $yorn = y || $yorn = n ]]; do
-   echo ""
-   read -p "${bldred}Please enter [y/n]: ${txtrst}" yorn
- done
-}
-
   if [[ ! -d prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 ]]; then
-    echo "${bldblu}Toolchain arm-linux-androideabi-4.9 not found.${txtrst}"
     echo ""
-    echo "${bldblu}Do you have it backed up somewhere?${txtrst}"
-    read -p "${bldblu}Enter it's path here, leave empty if you haven't: ${txtrst}" tc_dir
+    echo "${blu}WARNING:${txtrst} Toolchain arm-linux-androideabi-4.9 not found."
+    echo ""
+    echo "Do you have it backed up somewhere?"
+    read -p "Enter it's path here, leave empty if you don't have it: " tc_dir
 
       if [[ -z $tc_dir ]]; then
-        read -p "Do you want to build it? [y/n]: " yorn
+	echo ""
+        read -p "${blu}Do you want to build it? [y/n]: ${txtrst}" yorn
         yn_check
 	echo ""
 
           if [[ $yorn = n ]]; then
-	    echo "${bldred}arm-linux-androideabi-4.9 toolchain won't be built!${txtrst}"
+	    echo "${blu}WARNING:${txtrst} arm-linux-androideabi-4.9 toolchain won't be built!"
           else
 	    echo "${bldblu}arm-linux-androideabi-4.9 toolchain will be built!${txtrst}"
 	    no_tc1=1
@@ -191,26 +237,31 @@ yn_check()
 
           until [[ -d $tc_dir ]]; do
 	    echo ""
-	    echo "${bldred}Directory not found, try again: ${txtrst}"
+	    echo "${bldred}ERROR:${txtrst} Directory not found, try again: "
 	  done
 	echo ""
-	echo "${bldblu}Copying $tc_dir to prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9${txtrst}"
+	echo "${bldblu}Copying $tc_dir to prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9...${txtrst}"
 	cp -R "$tc_dir" prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9
+	echo ""
+	echo "${grn}SUCCES:${txtrst} arm-linux-androideabi-4.9 copied"
       fi
   fi
 
   if [[ ! -d prebuilts/gcc/linux-x86/arm/arm-eabi-4.9 ]]; then
-    echo "${bldblu}Toolchain arm-eabi-4.9 not found.${txtrst}"
+    echo ""
+    echo "${blu}WARNING:${txtrst} Toolchain arm-eabi-4.9 not found."
     echo ""
     echo "${bldblu}Do you have it backed up somewhere?${txtrst}"
     read -p "${bldblu}Enter it's path here, leave empty if you haven't: ${txtrst}" tc_dir
 
       if [[ -z $tc_dir ]]; then
-        read -p "Do you want to build it? [y+n]: " yorn
+	echo ""
+        read -p "${blu}Do you want to build it? [y/n]: ${txtrst}" yorn
         yn_check
+	echo ""
 
           if [[ $yorn = n ]]; then
-            echo "${bldred}arm-eabi-4.9 toolchain won't be built!${txtrst}"
+            echo "${blu}WARNING:${txtrst} arm-eabi-4.9 toolchain won't be built!"
           else
             echo "${bldblu}arm-eabi-4.9 toolchain will be built!${txtrst}"
 
@@ -227,16 +278,19 @@ yn_check()
 
           until [[ -d $tc_dir ]]; do
             echo ""
-            echo "${bldred}Directory not found, try again: ${txtrst}"
+            echo "${bldred}ERROR:${txtrst} Directory not found, try again: "
           done
         echo ""
         echo "${bldblu}Copying $tc_dir to prebuilts/gcc/linux-x86/arm/arm-eabi-4.9${txtrst}"
         cp -R "$tc_dir" prebuilts/gcc/linux-x86/arm/arm-eabi-4.9
+	echo ""
+	echo "${grn}SUCCES:${txtrst} arm-eabi-4.9 copied"
       fi
   fi
 
   if [[ $opt_tc -eq 1 ]]; then
 
+    echo ""
     echo "${bldblu}What toolchain repository do you want to use?${txtrst}"
     read -p "${bldblu}Leave empty for default ($HOME/sm-tc): ${txtrst}" SM_dir
 
@@ -248,66 +302,64 @@ yn_check()
 
 	  until [[ -d $SM_dir ]]; do
 	    echo ""
-	    echo "${bldred}The directory '$SM_dir' doesn't exist, try again${txtrst}"
-	    read -p "${bldred}Leave empty for default ($HOME/sm-tc): ${txtrst}" SM_dir
+	    echo "${bldred}ERROR:${txtrst} The directory '$SM_dir' doesn't exist, try again"
+	    read -p "Leave empty for default ($HOME/sm-tc): " SM_dir
 	  done
+
       elif [[ ! -d $SM_dir ]]; then
-        echo "${bldblu}Directory '$HOME/sm-tc' not found, creating it...${txtrst}"
+	echo ""
+        echo "${blu}WARNING:${txtrst} Directory '$HOME/sm-tc' not found, creating it..."
         mkdir -p "$HOME/sm-tc"
         opt_init=1
       fi
 
       if [[ ! -d $SM_dir/.repo && opt_init -ne 1 ]]; then
-        echo "${bldblu}No repo initialized in '$HOME/sm-tc' Initializing now...${txtrst}"
+	echo ""
+        echo "${blu}WARNING:${txtrst} No repo initialized in '$HOME/sm-tc' Initializing now..."
         opt_init=1
+
       elif [[ ! -d $SM_dir/smbuild ]]; then
-	echo "${bldred}Is this a SaberMod build tree?${txtrst}"
-	exit 7
+	echo ""
+	echo "${bldred}ERROR:${txtrst} Is this a SaberMod build tree?"
+	exit 6
       fi
     cd "$SM_dir"
       if [[ $opt_init -eq 1 ]]; then
+	cmmnd="repo init -u https://gitlab.com/SaberMod/sabermod-manifest.git -b master"
         repo init -u https://gitlab.com/SaberMod/sabermod-manifest.git -b master
-	FCheck=$?
-
-          if [[ $FCheck -ne 0 ]]; then
-            echo "${bldred}Failed to initialize repo in '$SM_dir', error code: $FCheck${txtrst}"
-            exit 8
-          fi
+	cmmnd_check
+	echo "${grn}SUCCES:${txtrst} Repo initialized"
       fi
+    echo ""
     echo "${bldgrn}Syncing with the SaberMod repo...${txtrst}"
+    cmmnd="repo sync"
     repo sync
-    FCheck=$?
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} Repo synced"
 
-      if [[ $FCheck -ne 0 ]]; then
-	echo "${bldred}Syncing with the SaberMod repo failed, error code $FCheck${txtrst}"
-	exit 9
-      fi
     cd smbuild
     shft_tc=0
 
       until [[ $shft_tc -eq $mch_tc ]]; do
 	  if [[ $no_tc1 -eq 1 ]]; then
-	    echo "${bldblu}Building arm-linux-androideabi-4.9 Toolchain because it is missing in the source code...${txtrst}"
+	    echo ""
+	    echo "${blu}WARNING:${txtrst} Building arm-linux-androideabi-4.9 Toolchain because it is missing in the source code..."
 	    thisSMDIR="${PWD##*/}"
             rm -R /tmp/$thisSMDIR
             cd arm
+	    cmmnd="bash arm-linux-androideabi-4.9"
 	    bash arm-linux-androideabi-4.9
-            FCheck=$?
+	    cmmnd_check
+	    echo ""
+	    echo "${grn}SUCCES:${txtrst} arm-linux-androideabi-4.9 toolchain built"
 
-              if [[ $FCheck -ne 0 ]]; then
-               echo "${bldred}Failed to build arm-linux-androideabi-4.9 toolchain${txtrst}"
-                exit 10
-              fi
+	    echo ""
             echo "${blu}Moving $HOME/tmp/arm-linux-androidabi-4.9 to $DIR/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9...${txtrst}"
+	    cmmnd="mv $HOME/tmp/arm-linux-androideabi-4.9 $DIR/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9"
 	    mv "$HOME/tmp/arm-linux-androideabi-4.9" "$DIR/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9"
-	    FCheck=$?
-
-             if [[ $FCheck -eq 0 ]]; then
-               echo "${bldcya}Toolchain arm-linux-androideabi-4.9 copied.${txtrst}"
-             else
-               echo "${bldred}Failed to copy toolchain arm-linux-androideabi-4.9.${txtrst}"
-               exit 11
-             fi
+	    cmmnd_check
+	    echo ""
+            echo "${grn}SUCCES:${txtrst} Toolchain arm-linux-androideabi-4.9 copied"
 
 	     if [[ $no_tc2 -eq 0 && $mch_tc_bckp > 0 ]]; then
 	       break
@@ -315,27 +367,22 @@ yn_check()
 	  fi
 
 	  if [[ $no_tc2 -eq 1 ]]; then
-            echo "${bldblu}Building arm-eabi-4.9 Toolchain because it is missing in the source code...${txtrst}"
+	    echo ""
+            echo "${blu}WARNING:${txtrst} Building arm-eabi-4.9 Toolchain because it is missing in the source code..."
             thisSMDIR="${PWD##*/}"
             rm -R /tmp/$thisSMDIR
             cd arm
+	    cmmnd="bash arm-eabi-4.9"
 	    bash arm-eabi-4.9
-            FCheck=$?
+            cmmnd_check
+            echo "${grn}SUCCES:${txtrst} arm-linux-androideabi-4.9 toolchain built"
 
-              if [[ $FCheck -ne 0 ]]; then
-                echo "${bldred}Failed to build arm-eabi-4.9 toolchain${txtrst}"
-                exit 12
-              fi
             echo "${blu}Moving $HOME/tmp/arm-gnueabi-4.9 to $DIR/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9...${txtrst}"
+	    cmmnd="mv $HOME/tmp/arm-linux-gnueabi-4.9 $DIR/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9"
             mv "$HOME/tmp/arm-linux-gnueabi-4.9" "$DIR/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9"
-            FCheck=$?
-
-              if [[ $FCheck -eq 0 ]]; then
-                echo "${bldcya}Toolchain arm-eabi-4.9 copied.${txtrst}"
-              else
-                echo "${bldred}Failed to copy toolchain arm-eabi-4.9.${txtrst}"
-                exit 13
-              fi
+	    cmmnd_check
+	    echo ""
+            echo "${grn}SUCCES:${txtrst} Toolchain arm-eabi-4.9 copied"
 
               if [[ $mch_tc_bckp > 0 ]]; then
 	        break
@@ -343,7 +390,7 @@ yn_check()
           fi
 	shft_tc=$(( shft_tc + 1 ))
         echo ""
-	read -p "${bldgrn}Enter toolchain ${shft_tc}'s name (ex. arm-eabi-4.9): ${txtrst}" bld_tc
+	read -p "${bldblu}Enter toolchain ${shft_tc}'s name (ex. arm-eabi-4.9): ${txtrst}" bld_tc
 	echo "$bld_tc" | grep "arm-" &>/dev/null
 	FCheck=$?
 
@@ -361,6 +408,7 @@ yn_check()
 	echo ""
 
 	  if [[ $opt_log -eq 1 || $opt_log -eq 3 ]]; then
+	    echo ""
             echo "${bldblu}Compiling toolchain $bld_tc with log (${HOME}/tc_${bld_tc}.log)${txtrst}"
             thisSMDIR="${PWD##*/}"
             rm -R /tmp/$thisSMDIR
@@ -368,32 +416,26 @@ yn_check()
 	  else
             thisSMDIR="${PWD##*/}"
             rm -R /tmp/$thisSMDIR
+	    cmmnd="bash $bld_tc"
 	    bash $bld_tc
-	    FCheck=$?
-
-	      if [[ $FCheck -ne 0 ]]; then
-	        echo "${bldred}Failed to build $bld_tc toolchain${txtrst}"
-	        exit 14
-	      fi
+	    cmmnd_check
+	    echo ""
+	    echo "${grn}SUCCES:${txtrst} $bld_tc built"
 	  fi
 	echo ""
 
 	  if [[ $bld_tc = arm-eabi-4.9 ]]; then
             echo "${blu}Moving $HOME/tmp/arm-linux-gnueabi-4.9 to $DIR/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9...${txtrst}"
+	    cmmnd="mv $HOME/tmp/arm-linux-gnueabi-4.9 $DIR/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9"
 	    mv "$HOME/tmp/arm-linux-gnueabi-4.9" "$DIR/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9"
-	    FCheck=$?
+	    cmmnd_check
+	    echo "${grn}SUCCES:${txtrst} arm-eabi-4.9 toolchain copied"
 	  else
 	    echo "${blu}Moving $HOME/tmp/$bld_tc to $DIR/prebuilts/gcc/linux-x86/$fldr/${bld_tc}...${txtrst}"
-	    mv "$HOME/tmp/$bld_tc" "$DIR/prebuilts/gcc/linux-x86/$fldr/${bld_tc}"
-	    FCheck=$?
-	  fi
-	echo ""
-
-	  if [[ $FCheck -eq 0 ]]; then
-	    echo "${bldcya}Toolchain $bld_tc copied.${txtrst}"
-	  else
-	    echo "${bldred}Failed to copy toolchain ${bld_tc}.${txtrst}"
-	    exit 15
+	    cmmnd="mv $HOME/tmp/$bld_tc $DIR/prebuilts/gcc/linux-x86/$fldr/$bld_tc"
+	    mv "$HOME/tmp/$bld_tc" "$DIR/prebuilts/gcc/linux-x86/$fldr/$bld_tc"
+	    cmmnd_check
+            echo "${grn}SUCCES:${txtrst} $bld_tc toolchain copied"
 	  fi
       done
     cd "$DIR"
@@ -402,39 +444,40 @@ yn_check()
 t1=$($DATE +%s)
 
 # Setup environment
+echo ""
 echo "${bldblu}Setting up environment${txtrst}"
 . build/envsetup.sh
 
   if [[ $? -eq 126 ]]; then
+    echo ""
     echo "${bldblu}Changing build/envsetup permissions...${txtrst}"
     chmod a+x build/envsetup.sh
     . build/envsetup.sh
   fi
 lunch "px_${device}-$variant"
+echo ""
+echo "${grn}SUCCES:${txtrst} Environment setup succesfully"
 
 # Remove system folder (this will create a new build.prop with updated build time and date)
 rm -f "$OUTDIR/target/product/$device/system/build.prop"
 rm -f "$OUTDIR/target/product/$device/system/app/*.odex"
 rm -f "$OUTDIR/target/product/$device/system/framework/*.odex"
 
-# Start compilation
-
-# Lunch & build device
+# Start compiling
 echo ""
 
   if [[ $opt_log -eq 2 || $opt_log -eq 3 ]]; then
-    echo "${bldblu}Compiling ROM with log (${HOME}/make_${device}.log)${txtrst}"
+    echo "${bldblu}Compiling ProjectX for the $f_device with log (${HOME}/make_${device}.log)${txtrst}"
+    cmmnd="make bacon -j$opt_jobs > $HOME/make_$device.log"
     make bacon "-j$opt_jobs" > "$HOME/make_$device.log"
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} Build completed"
   else
-    echo "${bldblu}Compiling ROM${txtrst}"
+    echo "${bldblu}Compiling ProjectX for the $f_Device ${txtrst}"
+    cmmnd="make bacon -j$opt_jobs"
     make bacon "-j$opt_jobs"
-  fi
-FCheck=$?
-
-# Check build completion
-  if [[ $FCheck -ne 0 ]]; then
-    echo "${bldred}Build failed, error code: ${FCheck}${txtrst}"
-    exit 16
+    cmmnd_check
+    echo "${grn}SUCCES:${txtrst} Build completed"
   fi
 
 # FTP file check
@@ -442,13 +485,13 @@ ftp_fls ()
  {
   echo ""
     if [[ -z $file ]]; then
-      echo "${bldred}Error: file '$HOME/$file' is missing or empty${txtrst}"
+      echo "${bldred}ERROR:${txtrst} File '$HOME/$file' is missing or empty"
       echo ""
       read -p "${bldblu}Enter the FTP server $ftp_usg here: ${txtrst}" ftp_tmp
       echo "$ftp_tmp" > "$HOME/$file"
     fi
       echo ""
-      echo "${bldgrn}Using '$ftp_cntnt' as FTP server $file_usg${txtrst}"
+      echo "${grn}SUCCES:${txtrst} Using '$ftp_cntnt' as FTP server $file_usg"
  }
 
 # Upload via FTP (-u)
@@ -477,16 +520,11 @@ ftp_fls ()
     # Start upload
     echo ""
     echo "${bldblu}Uploading '$OUTDIR/target/product/$device/$PX_VERSION' to '$ftp_host'...${txtrst}"
+    cmmnd="curl -T $OUTDIR/target/product/$device/$PX_VERSION -u $ftp_usr:$ftp_passwd ftp://$ftp_host"
     curl -T "$OUTDIR/target/product/$device/$PX_VERSION" -u "$ftp_usr":"$ftp_passwd" "ftp://$ftp_host"
-    FCheck=$?
+    cmmnd_check
     echo ""
-
-      if [[ $FCheck -eq 0 ]]; then
-        echo "${bldcya}'$PX_VERSION' uploaded to '$FTP_HOST'${txtrst}"
-      else
-        echo "${bldred}'$PX_VERSION' failed to upload to '$FTP_HOST', error code '$FCheck'${txtrst}"
-        exit 17
-      fi
+    echo "${grn}SUCCES:${txtrst} '$PX_VERSION' uploaded to '$FTP_HOST'"
   fi
 # Finished? Get elapsed time
 t2=$($DATE +%s)
@@ -494,5 +532,6 @@ t2=$($DATE +%s)
 tmin=$(( (t2-t1)/60 ))
 tsec=$(( (t2-t1)%60 ))
 
-echo "${bldgrn}Total time elapsed:${txtrst} ${grn}$tmin minutes $tsec seconds${txtrst}"
+echo ""
+echo "${bldcya}Total time elapsed:${txtrst} ${grn}$tmin minutes $tsec seconds${txtrst}"
 exit 0
