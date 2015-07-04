@@ -47,13 +47,7 @@ cmmnd_check()
   if [[ $? -ne 0 ]]; then
     echo ""
     echo "${bldred}ERROR:${txtrst} '$cmmnd' failed"
-    read -p "Do you want to continue? [y/n]: " yorn
-    yn_check
-    echo ""
-
-      if [[ $yorn -eq n ]]; then
-	exit 0
-      fi
+    exit 1
   fi
  }
 
@@ -159,10 +153,10 @@ variant="$2"
     variant=user
   fi
 
-  if [[ $device -eq bacon ]]; then
+  if [[ $device = bacon ]]; then
     f_device="OnePlus One"
 
-  elif [[ $device -eq m8 ]]; then
+  elif [[ $device = m8 ]]; then
     f_device="HTC One M8"
   fi
 
