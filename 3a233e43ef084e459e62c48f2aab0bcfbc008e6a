@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ad9bd40_0d4b0f88",
+        "filename": "config/common.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003174
+      },
+      "writtenOn": "2015-07-06T17:23:35Z",
+      "side": 1,
+      "message": "add different packages an per-device-basis",
+      "range": {
+        "startLine": 127,
+        "startChar": 1,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "3a233e43ef084e459e62c48f2aab0bcfbc008e6a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
