@@ -22,6 +22,30 @@
       "revId": "3a233e43ef084e459e62c48f2aab0bcfbc008e6a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ad9bd40_4d3c37e3",
+        "filename": "config/common.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1005211
+      },
+      "writtenOn": "2015-07-13T06:16:51Z",
+      "side": 1,
+      "message": "Yes, but how? :P",
+      "parentUuid": "9ad9bd40_0d4b0f88",
+      "range": {
+        "startLine": 127,
+        "startChar": 1,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "3a233e43ef084e459e62c48f2aab0bcfbc008e6a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
