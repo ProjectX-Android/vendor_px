@@ -4,3 +4,5 @@ add_lunch_combo px_m8-userdebug
 add_lunch_combo px_m8-user
 add_lunch_combo px_bacon-userdebug
 add_lunch_combo px_bacon-user
+add_lunch_combo px_bacon_caf-user
+add_lunch_combo px_bacon_caf-userdebug
